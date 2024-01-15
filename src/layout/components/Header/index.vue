@@ -127,23 +127,25 @@
       </div>
     </div>
   </div>
+  <!--项目配置-->
+  <ProjectSetting ref="drawerSetting" />
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, computed, unref } from 'vue'
+import { defineComponent, reactive, toRefs, computed, unref,ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import components from './components'
 import { NDialogProvider, useDialog, useMessage } from 'naive-ui'
 import { TABS_ROUTES } from '@/store/mutation-types'
 import { useUserStore } from '@/store/modules/user'
-// import ProjectSetting from './ProjectSetting.vue'; // 界面设置功能，暂时不予实现
+import ProjectSetting from './ProjectSetting.vue'
 import { AsideMenu } from '@/layout/Menu'
 import { useProjectSetting } from '@/hooks/setting/useProjectSetting'
 import { websiteConfig } from '@/config/website.config'
 
 export default defineComponent({
   name: 'PageHeader',
-  components: { ...components, NDialogProvider, AsideMenu },
+  components: { ...components, NDialogProvider, AsideMenu, ProjectSetting },
   props: {
     collapsed: {
       type: Boolean
@@ -163,7 +165,7 @@ export default defineComponent({
       getMenuSetting,
       getCrumbsSetting
     } = useProjectSetting()
-
+    const drawerSetting = ref()
     const { username } = userStore?.info || {}
 
     const state = reactive({
@@ -304,6 +306,11 @@ export default defineComponent({
       }
     ]
 
+    function openSetting() {
+      const { openDrawer } = drawerSetting.value;
+      openDrawer();
+    }
+
     //头像下拉菜单
     const avatarSelect = (key) => {
       switch (key) {
@@ -327,6 +334,7 @@ export default defineComponent({
       getChangeStyle,
       avatarSelect,
       breadcrumbList,
+      drawerSetting,
       reloadPage,
       getInverted,
       getMenuLocation,
